@@ -1,236 +1,78 @@
-/* Reset & Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&display=swap");
-
-body {
-  background-color: #473B52;
-  color: white;
-  font-family: 'Roboto', sans-serif;
-  padding: 40px 20px;
-  text-align: center;
-}
-
-h1, h2, h3, h4 {
-  font-family: 'Lobster', cursive;
-  color: white;
-  margin: 20px 0;
-}
-
-button {
-  background-color: #504766;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  width: 100%;
-  font-size: 1em;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-button:hover {
-  background-color: #3e3b52;
-}
-
-/* Login Cover */
-.login-cover {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: rgba(33, 33, 33, 0.85);
-  z-index: 9999;
-  padding: 1rem;
-}
-
-/* Selector */
-.selector-container {
-  margin-top: 30px;
-  font-family: 'Lobster', cursive;
-  color: white;
-}
-
-.selector-container select {
-  font-size: 1.2em;
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: none;
-  background-color: #ffffff;
-  color: #333;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
-
-/* Cards Layout */
 .cards-container {
-  margin-top: 30px;
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 20px;
+  flex-wrap: nowrap;
+  margin-top: 40px;
   position: relative;
+  height: 500px;
 }
 
 .stage-block {
+  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 240px;
+  transition: all 0.5s ease;
+  width: 240px;
 }
 
+.position-1 { left: 10%; top: 0; }
+.position-2 { left: 30%; top: 0; }
+.position-3 { left: 50%; top: 0; }
+.position-4 { left: 70%; top: 0; }
+
 .sleep-status {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   width: 200px;
   height: 200px;
   border-radius: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-size: 1.5em;
-  font-family: 'Lobster', cursive;
-  text-align: center;
+  font-family: Lobster, cursive;
+  transition: opacity 0.5s ease-in-out;
+  position: relative;
+  opacity: 0;
   padding: 10px;
-  margin-bottom: 10px;
-  color: white;
+  word-break: break-word;
+}
+
+.visible {
   opacity: 1;
-  background-size: cover;
-  background-position: center;
 }
 
 .awake-bg {
   background-image: url("https://i.imgur.com/v6EnUie.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
 }
+
 .light-sleep-bg {
   background-image: url("https://i.imgur.com/T0HWhm9.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
 }
+
 .deep-sleep-bg {
   background-image: url("https://i.imgur.com/NHZ4uxP.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
 }
+
 .dream-bg {
   background-image: url("https://i.imgur.com/rUPoZMQ.png");
-}
-
-.info-card {
-  background-color: white;
-  color: #333;
-  border-radius: 12px;
-  width: 100%;
-  padding: 15px;
-  font-family: 'Roboto', sans-serif;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  transition: transform 0.3s ease;
-  text-align: left;
-}
-
-.card-img {
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.card-title {
-  font-size: 1.1em;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.card-text {
-  font-size: 0.9em;
-  line-height: 1.4;
-}
-
-/* Form */
-.form-card {
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 30px 40px;
-  margin: 30px auto 0;
-  max-width: 400px;
-  text-align: left;
-  color: black;
-}
-
-.form-card label {
-  display: block;
-  font-weight: bold;
-  margin: 10px 0 5px;
-}
-
-.form-card input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1em;
-  margin-bottom: 15px;
-}
-
-.form-card button {
-  margin-top: 10px;
-}
-
-/* Sounds */
-.sound-buttons {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.sound-buttons button {
-  background-color: white;
-  font-family: 'Lobster', cursive;
-  color: black;
-  border: none;
-  padding: 12px 18px;
-  margin: 8px;
-  font-size: 1em;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.sound-buttons button:hover {
-  background-color: #2f2b38;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: white;
-}
-
-.stop {
-  display: inline-block;
-  font-size: 15px;
-  padding: 6px 12px;
-  margin-top: 10px;
-  background: none;
-  border: 1px solid white;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-}
-
-/* Sleep History */
-.sleep-history {
-  font-size: 16px;
-  line-height: 1.6;
-  margin-top: 30px;
-}
-
-.sleep-history h3 {
-  font-weight: bold;
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.button {
-  display: inline-block;
-  font-size: 12px;
-  padding: 4px 8px;
-  background: none;
-  border: 1px solid #999;
-  border-radius: 4px;
-  color: white;
-  margin-left: 6px;
-}
-
-.button:hover {
-  background-color: #eee;
-  color: black;
 }
