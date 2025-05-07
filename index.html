@@ -5,46 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sleeping Stage</title>
 
-  <!-- Bootstrap -->
+  <!-- Bootstrap 5 -->
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"
     rel="stylesheet"
   />
 
-  <!-- 自己的 CSS -->
+  <!-- 自訂 CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="app" class="container py-5">
-    <h1>{{ title }}</h1>
+  <div id="app" class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4" style="max-width: 400px; width: 100%;">
+      <h2 class="text-center mb-3">{{ isLoginMode ? 'Login' : 'Sign Up' }}</h2>
+      
+      <div class="mb-3">
+        <input type="email" class="form-control" placeholder="Email" v-model="email">
+      </div>
+      
+      <div class="mb-3">
+        <input type="password" class="form-control" placeholder="Password" v-model="password">
+      </div>
 
-    <p v-if="isLoginMode">Login mode is on.</p>
-    <p v-else>Sign up mode is on.</p>
+      <div class="mb-3" v-if="!isLoginMode">
+        <input type="password" class="form-control" placeholder="Repeat Password" v-model="repeatPassword">
+        <div v-if="passwordMismatch" class="text-danger mt-1">Passwords must match.</div>
+      </div>
 
-    <button @click="toggleMode" class="btn btn-primary">
-      Toggle Mode
-    </button>
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" v-model="agreeTerms" id="termsCheck">
+        <label class="form-check-label" for="termsCheck">
+          I agree to the terms of service.
+        </label>
+        <div v-if="!agreeTerms && attemptedSubmit" class="text-danger mt-1">Please agree to the terms to continue.</div>
+      </div>
+
+      <button class="btn btn-primary w-100 mb-2" @click="submitForm">
+        {{ isLoginMode ? 'Login' : 'Sign Up' }}
+      </button>
+
+      <button class="btn btn-outline-danger w-100 mb-2">
+        <img src="https://img.icons8.com/color/16/000000/google-logo.png" class="me-2">
+        Sign in with Google
+      </button>
+
+      <div class="text-center">
+        <a href="#" @click.prevent="toggleMode">
+          {{ isLoginMode ? "Don't have an account? Sign Up" : "Already have an account? Log In" }}
+        </a>
+      </div>
+    </div>
   </div>
 
   <!-- Vue 3 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.global.prod.min.js"></script>
 
-  <!-- 初始化 Vue 3 App -->
-  <script>
-    const { createApp, ref } = Vue;
-
-    createApp({
-      setup() {
-        const isLoginMode = ref(true);
-        const title = ref("Sleeping Stage Login");
-
-        function toggleMode() {
-          isLoginMode.value = !isLoginMode.value;
-        }
-
-        return { title, isLoginMode, toggleMode };
-      }
-    }).mount("#app");
-  </script>
+  <!-- 自訂 JS -->
+  <script src="script.js"></script>
 </body>
 </html>
