@@ -6,189 +6,170 @@
   <title>Sleeping Stage</title>
 
   <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&family=Pacifico&family=Comfortaa:wght@300&family=Oswald:wght@500&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&family=Pacifico&family=Comfortaa:wght@300&family=Oswald:wght@500&family=Permanent+Marker&display=swap" rel="stylesheet" />
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="app">
-    <!-- Vue app will be rendered here -->
+  <!-- LOGIN COVER -->
+  <div v-if="!isLogin" class="login-cover d-flex align-items-center justify-content-center">
+    <div class="card p-4 shadow" style="max-width: 400px; width: 100%; border-radius: 15px;">
+      <h3 class="text-center mb-3">{{ isLoginMode ? 'Login' : 'Sign Up' }}</h3>
+
+      <form @submit.prevent="isLoginMode ? signIn() : register()">
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input v-model="email" type="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input v-model="password" type="password" class="form-control" required>
+        </div>
+
+        <div class="mb-3" v-if="!isLoginMode">
+          <label class="form-label">Repeat Password</label>
+          <input v-model="passwordVerified" type="password" class="form-control" required>
+          <div class="form-text text-danger" v-if="passwordNotConsistent">
+            Passwords must match.
+          </div>
+        </div>
+
+        <div class="form-check mb-3" v-if="!isLoginMode">
+          <input class="form-check-input" type="checkbox" v-model="agreeAllTerms" id="termsCheck">
+          <label class="form-check-label" for="termsCheck">
+            I agree to the terms of service.
+          </label>
+          <div class="form-text text-danger" v-if="termsUnchecked">
+            Please agree to the terms to continue.
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mb-2">
+          {{ isLoginMode ? 'Login' : 'Sign Up' }}
+        </button>
+
+        <button type="button" class="btn btn-outline-danger w-100 mb-2" @click="loginWithGoogle">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 20px; margin-right: 8px;">
+          Sign in with Google
+        </button>
+
+        <p class="text-center mt-3">
+          <a href="#" @click.prevent="switchMode">
+            {{ isLoginMode ? 'Don’t have an account? Sign Up' : 'Already have an account? Log In' }}
+          </a>
+        </p>
+      </form>
+    </div>
   </div>
+
+  <!-- SLEEP CYCLE APP -->
+  <div v-if="isLogin">
+    <h1><strong>The Sleep Cycle</strong></h1>
+    <hr>
+
+    <div class="selector-container">
+      <label for="information">Select Sleep Stage: </label>
+      <select v-model="selectedStage">
+        <option value="default">Default</option>
+        <option value="awake">😀 Awake</option>
+        <option value="light-sleep">😪 Light Sleep</option>
+        <option value="deep-sleep">😴 Deep Sleep</option>
+        <option value="dream">🤩 Dream</option>
+        <option value="all">🌙 Show All</option>
+      </select>
+    </div>
+
+    <div class="cards-container">
+      <div
+        v-for="(status, index) in statuses"
+        :key="status.value"
+        :class="['stage-block', positionClasses[index], 'hover-wrapper', 'fade-in']"
+        v-show="selectedStage === 'all' || selectedStage === status.value || (selectedStage === 'default' && currentIndex === index)"
+      >
+        <sleep-status
+          :emoji="status.emoji"
+          :stage="status.stage"
+          :bg-class="status.bgClass"
+          :is-visible="true"
+        ></sleep-status>
+
+        <div class="info-card">
+          <img :src="status.card.image" alt="card image" class="card-img">
+          <div class="card-body">
+            <h5 class="card-title">{{ status.card.title }}</h5>
+            <p class="card-text">{{ status.card.text }}</p>
+            <button @click="selectFormStage(status.value)">Fill {{ status.stage }} </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2><strong>The Sleep Cycle Tracker</strong></h2>
+    <hr>
+
+    <div class="form-card">
+      <h3>Sleep Data</h3>
+      <p v-if="formStage" style="font-weight: bold; color: #504766; text-align: center; margin-bottom: 15px;">
+        You are entering data for: <span style="text-transform: capitalize">{{ getStageName(formStage) }}</span>
+      </p>
+      <form @submit.prevent="saveData">
+        <label>Sleep Time (hrs):</label>
+        <input v-model="sleepTime" type="number" step="0.1" placeholder="e.g. 7.5" required>
+
+        <label>Turn Overs:</label>
+        <input v-model="turnOvers" type="number" placeholder="e.g. 2" required>
+
+        <label>Heartbeat:</label>
+        <input v-model="heartbeat" type="number" placeholder="e.g. 90 BPM" required>
+
+        <button type="submit">{{ editingId ? "Update" : "Save Data" }}</button>
+      </form>
+    </div>
+
+    <h4><strong>Sleep Sounds</strong></h4>
+    <hr>
+    <div class="sound-buttons">
+      <button @click="playSound('rain')">🌧 Rain</button>
+      <button @click="playSound('ocean')">🌊 Ocean</button>
+      <button @click="playSound('forest')">🌲 Forest</button>
+      <button @click="playSound('fire')">🔥 Fireplace</button>
+    </div>
+    <audio ref="player" style="display:none"></audio>
+    <button @click="stopSound" class="stop">Music Stop</button>
+
+    <div class="sleep-history">
+      <h3>Sleep Records</h3>
+      <ul>
+        <li v-for="record in sleepRecords" :key="record.id" id="data">
+          🛌 {{ record.sleepTime }} |
+          🔄 {{ record.turnOvers }} |
+          ❤️ {{ record.heartbeat }} |
+          🕒 {{ record.submittedAt }} |
+          🌙 Stage: {{ getStageName(record.category) }}
+          <button @click="editRecord(record)" class="button">Edit</button>
+          <button @click="deleteRecord(record.id)" class="button">Delete</button>
+        </li>
+      </ul>
+    </div>
+    <button @click="logOut">Logout</button>
+  </div>
+</div>
 
   <!-- Vue 3 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.global.prod.min.js"></script>
 
-  <!-- Firebase Compat (For GitHub Pages without build tools) -->
+  <!-- Firebase Compat CDN -->
   <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore-compat.js"></script>
 
-
-    <!-- LOGIN COVER -->
-    <div v-if="!isLogin" class="login-cover d-flex align-items-center justify-content-center">
-      <div class="card p-4 shadow" style="max-width: 400px; width: 100%; border-radius: 15px;">
-        <h3 class="text-center mb-3">{{ isLoginMode ? 'Login' : 'Sign Up' }}</h3>
-
-        <form @submit.prevent="isLoginMode ? signIn() : register()">
-          <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input v-model="email" type="email" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input v-model="password" type="password" class="form-control" required>
-          </div>
-
-          <div class="mb-3" v-if="!isLoginMode">
-            <label class="form-label">Repeat Password</label>
-            <input v-model="passwordVerified" type="password" class="form-control" required>
-            <div class="form-text text-danger" v-if="passwordNotConsistent">
-              Passwords must match.
-            </div>
-          </div>
-
-          <div class="form-check mb-3" v-if="!isLoginMode">
-            <input class="form-check-input" type="checkbox" v-model="agreeAllTerms" id="termsCheck">
-            <label class="form-check-label" for="termsCheck">
-              I agree to the terms of service.
-            </label>
-            <div class="form-text text-danger" v-if="termsUnchecked">
-              Please agree to the terms to continue.
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary w-100 mb-2">
-            {{ isLoginMode ? 'Login' : 'Sign Up' }}
-          </button>
-
-          <button type="button" class="btn btn-outline-danger w-100 mb-2" @click="loginWithGoogle">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 20px; margin-right: 8px;">
-            Sign in with Google
-          </button>
-
-          <p class="text-center mt-3">
-            <a href="#" @click.prevent="switchMode">
-              {{ isLoginMode ? 'Don’t have an account? Sign Up' : 'Already have an account? Log In' }}
-            </a>
-          </p>
-        </form>
-      </div>
-    </div>
-
-    <!-- SLEEP CYCLE APP -->
-    <div v-if="isLogin">
-     <h1><Strong>The Sleep Cycle</Strong></h1>
-   <hr>
-
-  <div class="selector-container">
-    <label for="information">Select Sleep Stage:   </label>
-    <select v-model="selectedStage">
-      <option value="default">Default</option>
-      <option value="awake">😀 Awake</option>
-      <option value="light-sleep">😪 Light Sleep</option>
-      <option value="deep-sleep">😴 Deep Sleep</option>
-      <option value="dream">🤩 Dream</option>
-      <option value="all">🌙 Show All</option>
-    </select>
-  </div>
-    
-    
-<div class="cards-container">
-  <div 
-    v-for="(status, index) in statuses" 
-    :key="status.value"
-    :class="['stage-block', positionClasses[index], 'hover-wrapper', 'fade-in']"
-    v-show="selectedStage === 'all' || selectedStage === status.value || (selectedStage === 'default' && currentIndex === index)"
-  >
-
-    <sleep-status 
-      :emoji="status.emoji"
-      :stage="status.stage"
-      :bg-class="status.bgClass"
-      :is-visible="true"
-    ></sleep-status>
-
-    
-
-    <div class="info-card">
-      <img :src="status.card.image" alt="card image" class="card-img">
-      <div class="card-body">
-        <h5 class="card-title">{{ status.card.title }}</h5>
-        <p class="card-text">{{ status.card.text }}</p>
-        <button @click="selectFormStage(status.value)">Fill {{ status.stage }} </button>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-    
-
-    <h2><strong>The Sleep Cycle Tracker</strong></h2>
-    <hr>
-<div class="form-card">
-  <h3>Sleep Data</h3>
-  <p v-if="formStage" style="font-weight: bold; color: #504766; text-align: center; margin-bottom: 15px;">
-  You are entering data for: <span style="text-transform: capitalize">{{ getStageName(formStage) }}</span>
-</p>
-  <form @submit.prevent="saveData">
-    <label>Sleep Time (hrs):</label>
-    <input v-model="sleepTime" type="number" step="0.1" placeholder="e.g. 7.5" required>
-
-    <label>Turn Overs:</label>
-    <input v-model="turnOvers" type="number" placeholder="e.g. 2" required>
-
-    <label>Heartbeat:</label>
-    <input v-model="heartbeat" type="number" placeholder="e.g. 90 BPM" required>
-
-    <button type="submit">{{ editingId ? "Update" : "Save Data" }}</button>
-  </form>
-</div>
-    
-    
-    
-  <h4><strong>Sleep Sounds</strong></h4>
-        <hr>
-  <div class="sound-buttons">
-  <button @click="playSound('rain')">🌧 Rain</button>
-  <button @click="playSound('ocean')">🌊 Ocean</button>
-  <button @click="playSound('forest')">🌲 Forest</button>
-  <button @click="playSound('fire')">🔥 Fireplace</button>
-</div>
-    <audio ref="player" style="display:none"></audio>
-   <button @click="stopSound" class= "stop">Music Stop</button>
-    
-    
-  
-<div class="sleep-history">
-  <h3>Sleep Records</h3>
-  <ul>
-    <li v-for="record in sleepRecords" :key="record.id" id="data">
-      🛌 {{ record.sleepTime }} |
-      🔄 {{ record.turnOvers }} |
-      ❤️ {{ record.heartbeat }} |
-      🕒 {{ record.submittedAt }} |
-      🌙 Stage: {{ getStageName(record.category) }}
-         
-  <button @click="editRecord(record)" class="button">Edit</button>
-  <button @click="deleteRecord(record.id)" class="button">Delete</button>
-
-
-    </li>
-  </ul>
-</div>
-      <button @click="logOut">Logout</button>
-    </div>
-
-  </div>
-  
-  <!-- Your App Logic -->
+  <!-- App Logic -->
   <script src="script.js"></script>
-
 </body>
 </html>
