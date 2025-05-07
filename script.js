@@ -319,7 +319,7 @@ App.component('sleep-status', {
   `
 });
 
-App.mount("#app");
+export default App;
 
 
 
