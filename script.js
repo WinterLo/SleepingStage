@@ -160,9 +160,9 @@ submitBtn.addEventListener("click", async (e) => {
       currentUser = userCredential.user;
     } else {
       await createUserWithEmailAndPassword(auth, email, password);
-      currentUser = auth.currentUser;
-      isLoginMode = true;
-      updateFormMode();
+currentUser = auth.currentUser;
+loginCover.style.display = "none";
+mainApp.style.display = "block"; 
     }
   } catch (error) {
     alert("Auth Error: " + error.message);
