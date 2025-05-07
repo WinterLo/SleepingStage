@@ -1,12 +1,147 @@
-.cards-container {
+/* style.css - Custom Styles */
+@import url("https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:wght@400;700&family=Pacifico&family=Comfortaa:wght@300&family=Oswald:wght@500&family=Permanent+Marker&display=swap");
+
+body {
+  background-color: #473B52 !important;
+  text-align: center !important;
+  padding: 20px;
+}
+
+h1, h2, h4 {
+  font-family: Verdana, sans-serif;
+  color: white !important;
+}
+
+.login-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(33, 33, 33, 0.85);
+  z-index: 9999;
+  padding: 1rem;
+}
+
+button,
+.form-card button,
+.sound-buttons button {
+  background-color: #504766;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  width: 100%;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover,
+.sound-buttons button:hover,
+.form-card button:hover {
+  background-color: #3E3B52;
+}
+
+.selector-container,
+.cards-container,
+.info-cards-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
-  flex-wrap: nowrap;
-  margin-top: 40px;
-  position: relative;
-  height: 500px;
+  margin-top: 30px;
+}
+
+.selector-container {
+  flex-direction: column;
+  font-family: 'Lobster', cursive;
+  color: white;
+}
+
+.selector-container label {
+  font-size: 1.4em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.selector-container select {
+  font-size: 1.2em;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-family: 'Lobster', cursive;
+  background-color: #ffffff;
+  color: #333;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sleep-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 200px;
+  border-radius: 40px;
+  font-size: 1.5em;
+  font-family: 'Lobster', cursive;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+  padding: 10px;
+  word-break: break-word;
+  text-align: center;
+}
+
+.visible {
+  opacity: 1;
+}
+
+.awake-bg,
+.light-sleep-bg,
+.deep-sleep-bg,
+.dream-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+}
+
+.awake-bg { background-image: url("https://i.imgur.com/v6EnUie.png"); }
+.light-sleep-bg { background-image: url("https://i.imgur.com/T0HWhm9.png"); }
+.deep-sleep-bg { background-image: url("https://i.imgur.com/NHZ4uxP.png"); }
+.dream-bg { background-image: url("https://i.imgur.com/rUPoZMQ.png"); }
+
+.info-card {
+  background-color: #ffffff;
+  color: #333;
+  border-radius: 12px;
+  width: 200px;
+  padding: 15px;
+  font-family: 'Roboto', sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+
+.card-img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.card-text {
+  font-size: 0.9em;
+  line-height: 1.4;
 }
 
 .stage-block {
@@ -14,8 +149,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: all 0.5s ease;
   width: 240px;
+  transition: all 0.5s ease;
 }
 
 .position-1 { left: 10%; top: 0; }
@@ -23,57 +158,96 @@
 .position-3 { left: 50%; top: 0; }
 .position-4 { left: 70%; top: 0; }
 
-.sleep-status {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;
-  justify-content: center;
+.hover-wrapper:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+}
+
+.form-card {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 30px 40px;
+  margin: 30px auto 0;
+  max-width: 400px;
+  text-align: left;
+}
+
+.form-card h3 {
   text-align: center;
-  width: 200px;
-  height: 200px;
-  border-radius: 40px;
-  font-size: 1.5em;
-  font-family: Lobster, cursive;
-  transition: opacity 0.5s ease-in-out;
-  position: relative;
-  opacity: 0;
+  font-family: 'Lobster', cursive;
+  margin-bottom: 20px;
+}
+
+.form-card label {
+  display: block;
+  font-weight: bold;
+  margin: 10px 0 5px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.form-card input {
+  width: 100%;
   padding: 10px;
-  word-break: break-word;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  margin-bottom: 15px;
 }
 
-.visible {
-  opacity: 1;
+.sound-buttons {
+  text-align: center;
+  margin-top: 30px;
 }
 
-.awake-bg {
-  background-image: url("https://i.imgur.com/v6EnUie.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+.sound-buttons button {
+  background-color: white;
+  font-family: 'Lobster', cursive;
+  color: black;
+  border: none;
+  padding: 12px 18px;
+  margin: 8px;
+  font-size: 1em;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.sleep-history {
+  font-family: Verdana, sans-serif;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+
+.sleep-history h3 {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.button,
+.stop {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 6px;
+  margin-left: 6px;
+  border: 1px solid #999;
+  border-radius: 4px;
   color: white;
+  max-width: fit-content;
 }
 
-.light-sleep-bg {
-  background-image: url("https://i.imgur.com/T0HWhm9.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
+.button:hover {
+  background-color: #eee;
+  color: black;
 }
-
-.deep-sleep-bg {
-  background-image: url("https://i.imgur.com/NHZ4uxP.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
-}
-
-.dream-bg {
-  background-image: url("https://i.imgur.com/rUPoZMQ.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
-}
- 
