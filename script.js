@@ -78,13 +78,14 @@ Vue.createApp({
         .catch(err => alert(err.message));
     },
     signIn() {
-      auth.signInWithEmailAndPassword(this.email, this.password)
-        .then(res => {
-          this.currentUser = res.user;
-          this.isLogin = true;
-        })
-        .catch(err => alert(err.message));
-    },
+  auth.signInWithEmailAndPassword(this.email, this.password)
+    .then(res => {
+      this.currentUser = res.user;
+      this.isLogin = true;
+      location.reload(); // 強制刷新頁面
+    })
+    .catch(err => alert(err.message));
+}
     loginWithGoogle() {
       auth.signInWithPopup(provider)
         .then(result => {
