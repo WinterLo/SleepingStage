@@ -153,11 +153,6 @@ button:hover,
   transition: all 0.5s ease;
 }
 
-.position-1 { left: 10%; top: 0; }
-.position-2 { left: 30%; top: 0; }
-.position-3 { left: 50%; top: 0; }
-.position-4 { left: 70%; top: 0; }
-
 .hover-wrapper:hover {
   transform: translateY(-8px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
