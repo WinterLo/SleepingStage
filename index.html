@@ -92,14 +92,14 @@
         :class="['stage-block', positionClasses[index], 'hover-wrapper', 'fade-in']"
         v-show="selectedStage === 'all' || selectedStage === status.value || (selectedStage === 'default' && currentIndex === index)"
       >
-        <div class="info-card">
+        
         <sleep-status
           :emoji="status.emoji"
           :stage="status.stage"
           :bg-class="status.bgClass"
           :is-visible="true"
         ></sleep-status>
-          
+          <div class="info-card">
           <img :src="status.card.image" alt="card image" class="card-img">
           <div class="card-body">
             <h5 class="card-title">{{ status.card.title }}</h5>
