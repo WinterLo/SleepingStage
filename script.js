@@ -163,6 +163,10 @@ submitBtn.addEventListener("click", async (e) => {
 currentUser = auth.currentUser;
 loginCover.style.display = "none";
 mainApp.style.display = "block"; 
+      emailInput.value = '';
+passwordInput.value = '';
+passwordVerifiedInput.value = '';
+termsCheck.checked = false;
     }
   } catch (error) {
     alert("Auth Error: " + error.message);
